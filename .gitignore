@@ -7,3 +7,4 @@ proj.win32/
 proj.wp8-xaml/
 .cocos-project.json
 .DS_Store
+.gitignore
