@@ -1,5 +1,17 @@
 #include "GameLayer.h"
 
+// Create関数不要にする
+USING_NS_CC;
+
+// シーンの作成
+Scene* GameLayer::createScene()
+{
+    auto scene = Scene::create();
+    auto layer = GameLayer::create();
+    scene->addChild(layer);
+    return scene;
+}
+
 //初期化
 bool GameLayer::init()
 {

@@ -9,7 +9,7 @@
 class GameLayer : public cocos2d::Layer
 {
 protected:
-    //タグ
+    //タグ　
     enum Tag
     {
         T_BG = 1,
