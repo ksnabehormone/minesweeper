@@ -9,9 +9,10 @@ public:
     enum class PanelType
     {
         Unknown,
-        Safety,
-        Bomb,
-        Flag
+        Open,
+        Mystery,
+        Flag,
+        Bomb
     };
     struct PositionIndex
     {
@@ -32,8 +33,9 @@ public:
     virtual bool init();
     void onEnter();
     CREATE_FUNC(PanelSprite);
-    CC_SYNTHESIZE(PanelType, _panelType, PanelType);
+    CC_PROPERTY(PanelType, _panelType, PanelType);
     CC_PROPERTY(PositionIndex, _positionIndex, PositionIndex);
+    CC_SYNTHESIZE(bool, _isBomb, IsBomb);
     //位置インデックスからタグを取得
     static int generateTag(PositionIndex positionIndex);
 protected:

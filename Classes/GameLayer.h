@@ -36,12 +36,18 @@ protected:
     
     State _state; //ゲームの状態
     float _totalTime; //ゲーム時間
+    std::vector<int> _bombs;
     
     // パネル作成
-    PanelSprite* newPanel(PanelSprite::PositionIndex positionIndex, PanelSprite::PanelType type);
+    PanelSprite* newPanel(PanelSprite::PositionIndex positionIndex, PanelSprite::PanelType type, bool isBomb);
     // タッチ地点からパネルを取得
     PanelSprite* getTouchPanel(cocos2d::Point touchPos, PanelSprite::PositionIndex withoutPosIndex = PanelSprite::PositionIndex());
-    
+    // タッチパネル処理
+    void touchPanelEvent(PanelSprite* target);
+    // ボム作成
+    void initBomb();
+    // ボムか判定
+    bool checkBombIndex(int target);
 public:
     static cocos2d::Scene* createScene(); //シーン生成
     virtual bool init(); //初期化

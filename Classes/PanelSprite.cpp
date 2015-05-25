@@ -17,25 +17,29 @@ bool PanelSprite::init()
 void PanelSprite::onEnter()
 {
     Sprite::onEnter();
-    
-    // ※initのタイミングではダメだった。謎
+}
+
+PanelSprite::PanelType PanelSprite::getPanelType()
+{
+    return _panelType;
+}
+
+void PanelSprite::setPanelType(PanelType panelType)
+{
+    _panelType = panelType;
     setTexture();
 }
 
 //位置インデックスを返す
 PanelSprite::PositionIndex PanelSprite::getPositionIndex()
 {
-    //位置インデックスを返す
     return _positionIndex;
 }
 
 //位置インデックスとタグを変更する
 void PanelSprite::setPositionIndex(PositionIndex positionIndex)
 {
-    //位置インデックスを保持する
     _positionIndex = positionIndex;
-    
-    //タグをセットする
     setTag(generateTag(_positionIndex));
 }
 
@@ -45,8 +49,11 @@ void PanelSprite::setTexture()
         case PanelType::Unknown:
             this->cocos2d::Sprite::setTexture("green.png");
             break;
-        case PanelType::Safety:
+        case PanelType::Open:
             this->cocos2d::Sprite::setTexture("yellow.png");
+            break;
+        case PanelType::Mystery:
+            this->cocos2d::Sprite::setTexture("pink.png");
             break;
         case PanelType::Bomb:
             this->cocos2d::Sprite::setTexture("red.png");

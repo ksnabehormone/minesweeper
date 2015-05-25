@@ -14,6 +14,8 @@ USING_NS_CC;
 // パネルのサイズ
 #define PANEL_SIZE 106
 
+#define BOMB_SIZE 15
+
 
 // シーンの作成
 Scene* GameLayer::createScene()
@@ -46,8 +48,9 @@ bool GameLayer::init()
     std::random_device rd;
     _mt = std::mt19937(rd());
     
-    initPanel();
+    initBomb();
     
+    initPanel();
     
     return true;
 }
@@ -66,27 +69,38 @@ void GameLayer::update(float dt)
     
 }
 
+// パネルを初期化
 void GameLayer::initPanel()
 {
+    int panelIndex = 0;
     for (int x = 1; x <= PANEL_WIDTH_CNT; x++)
     {
         for (int y = 1; y <= PANEL_HEIGHT_CNT; y++)
         {
             auto positionIndex = PanelSprite::PositionIndex(x, y);
             auto type = PanelSprite::PanelType::Unknown;
-            newPanel(positionIndex, type);
+            
+            // ボム配列に含まれるインデックスはボムになる
+            bool isBomb = false;
+            if (checkBombIndex(panelIndex)) {
+                isBomb = true;
+            }
+            panelIndex++;
+            
+            newPanel(positionIndex, type, isBomb);
         }
     }
     
 }
 
-PanelSprite* GameLayer::newPanel(PanelSprite::PositionIndex positionIndex, PanelSprite::PanelType type)
+PanelSprite* GameLayer::newPanel(PanelSprite::PositionIndex positionIndex, PanelSprite::PanelType type, bool isBomb)
 {
     auto sprite = PanelSprite::create();
     sprite->setPanelType(type);
     sprite->setPositionIndex(positionIndex);
     sprite->setPosition(PANEL_1_X + ((positionIndex.x - 0.5) * PANEL_SIZE),
                         PANEL_1_Y - ((positionIndex.y - 0.5) * PANEL_SIZE));
+    sprite->setIsBomb(isBomb);
     addChild(sprite, GameLayer::ZOrder::BALL);
     return sprite;
 }
@@ -122,12 +136,52 @@ PanelSprite* GameLayer::getTouchPanel(cocos2d::Point touchPos, PanelSprite::Posi
     return nullptr;
 }
 
+void GameLayer::touchPanelEvent(PanelSprite* target)
+{
+    // タイプを取得
+    auto type = target->getPanelType();
+    // フラグなら踏めない
+    
+    //　ボムなら爆発
+    if (target->getIsBomb())
+    {
+        target->setPanelType(PanelSprite::PanelType::Open);
+    }
+    else
+    {
+        target->setPanelType(PanelSprite::PanelType::Bomb);
+    }
+}
+
+void GameLayer::initBomb()
+{
+    for (int i=0; i < BOMB_SIZE; i++)
+    {
+        int index = arc4random()%30;
+        _bombs.push_back(index);
+    }
+}
+
+bool GameLayer::checkBombIndex(int target)
+{
+    for (int i=0; i < _bombs.size(); i++)
+    {
+        if (target == _bombs[i])
+        {
+            return true;
+        }
+    }
+    return false;
+}
+
+// タッチ処理
 bool GameLayer::onTouchBegan(Touch* touch, Event* unused_event)
 {
     PanelSprite* touchPanel = getTouchPanel(touch->getLocation());
     
     if (touchPanel != nullptr)  
     {
+        touchPanelEvent(touchPanel);
         return true;
     }
     else
