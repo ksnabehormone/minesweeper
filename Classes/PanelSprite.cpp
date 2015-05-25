@@ -22,6 +22,23 @@ void PanelSprite::onEnter()
     setTexture();
 }
 
+//位置インデックスを返す
+PanelSprite::PositionIndex PanelSprite::getPositionIndex()
+{
+    //位置インデックスを返す
+    return _positionIndex;
+}
+
+//位置インデックスとタグを変更する
+void PanelSprite::setPositionIndex(PositionIndex positionIndex)
+{
+    //位置インデックスを保持する
+    _positionIndex = positionIndex;
+    
+    //タグをセットする
+    setTag(generateTag(_positionIndex));
+}
+
 void PanelSprite::setTexture()
 {
     switch (_panelType) {
@@ -40,4 +57,10 @@ void PanelSprite::setTexture()
         default:
             break;
     }
+}
+
+//位置インデックスからタグを取得
+int PanelSprite::generateTag(PositionIndex positionIndex)
+{
+    return positionIndex.x * 100 + positionIndex.y;
 }

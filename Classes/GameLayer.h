@@ -39,6 +39,8 @@ protected:
     
     // パネル作成
     PanelSprite* newPanel(PanelSprite::PositionIndex positionIndex, PanelSprite::PanelType type);
+    // タッチ地点からパネルを取得
+    PanelSprite* getTouchPanel(cocos2d::Point touchPos, PanelSprite::PositionIndex withoutPosIndex = PanelSprite::PositionIndex());
     
 public:
     static cocos2d::Scene* createScene(); //シーン生成

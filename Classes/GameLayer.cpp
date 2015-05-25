@@ -68,9 +68,10 @@ void GameLayer::update(float dt)
 
 void GameLayer::initPanel()
 {
-    for (int x = 0; x < PANEL_WIDTH_CNT; x++)
+    for (int x = 1; x <= PANEL_WIDTH_CNT; x++)
     {
-        for (int y = 0; y < PANEL_HEIGHT_CNT; y++) {
+        for (int y = 1; y <= PANEL_HEIGHT_CNT; y++)
+        {
             auto positionIndex = PanelSprite::PositionIndex(x, y);
             auto type = PanelSprite::PanelType::Unknown;
             newPanel(positionIndex, type);
@@ -84,15 +85,55 @@ PanelSprite* GameLayer::newPanel(PanelSprite::PositionIndex positionIndex, Panel
     auto sprite = PanelSprite::create();
     sprite->setPanelType(type);
     sprite->setPositionIndex(positionIndex);
-    sprite->setPosition(PANEL_1_X + (positionIndex.x * PANEL_SIZE),
-                        PANEL_1_Y - (positionIndex.y * PANEL_SIZE));
-    sprite->setAnchorPoint(Point(0, 1));
+    sprite->setPosition(PANEL_1_X + ((positionIndex.x - 0.5) * PANEL_SIZE),
+                        PANEL_1_Y - ((positionIndex.y - 0.5) * PANEL_SIZE));
     addChild(sprite, GameLayer::ZOrder::BALL);
     return sprite;
 }
 
+PanelSprite* GameLayer::getTouchPanel(cocos2d::Point touchPos, PanelSprite::PositionIndex withoutPosIndex)
+{
+    for (int x = 1; x <= PANEL_WIDTH_CNT; x++)
+    {
+        for (int y = 1; y <= PANEL_HEIGHT_CNT; y++) {
+            if (x == withoutPosIndex.x && y == withoutPosIndex.y)
+            {
+                //指定位置のボールの場合は、以下の処理を行わない
+                continue;
+            }
+            
+            //タップ位置にあるボールかどうかを判断する
+            int tag = PanelSprite::generateTag(PanelSprite::PositionIndex(x, y));
+            auto panel = (PanelSprite*)(getChildByTag(tag));
+            if (panel)
+            {
+                //2点間の距離を求める
+                float distance = panel->getPosition().getDistance(touchPos);
+                
+                //ボールの当たり判定は円形。つまりボールの中心からの半径で判断する
+                if (distance <= PANEL_SIZE / 2)
+                {
+                    //タップした位置にボールが存在する
+                    return panel;
+                }
+            }
+        }
+    }
+    return nullptr;
+}
+
 bool GameLayer::onTouchBegan(Touch* touch, Event* unused_event)
 {
+    PanelSprite* touchPanel = getTouchPanel(touch->getLocation());
+    
+    if (touchPanel != nullptr)  
+    {
+        return true;
+    }
+    else
+    {
+        return false;
+    }
 }
 
 void GameLayer::onTouchMoved(Touch* touch, Event* unused_event)

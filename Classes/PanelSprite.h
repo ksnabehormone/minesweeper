@@ -33,7 +33,9 @@ public:
     void onEnter();
     CREATE_FUNC(PanelSprite);
     CC_SYNTHESIZE(PanelType, _panelType, PanelType);
-    CC_SYNTHESIZE(PositionIndex, _positionIndex, PositionIndex);
+    CC_PROPERTY(PositionIndex, _positionIndex, PositionIndex);
+    //位置インデックスからタグを取得
+    static int generateTag(PositionIndex positionIndex);
 protected:
     void setTexture();
 };
