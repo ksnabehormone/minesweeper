@@ -47,6 +47,11 @@ public:
     virtual void onEnter(); //レイヤー表示時処理
     virtual void update(float dt); //update関数（毎フレーム処理）
     void initPanel();
+    //シングルタップイベント
+    virtual bool onTouchBegan(cocos2d::Touch* touch, cocos2d::Event* unused_event);
+    virtual void onTouchMoved(cocos2d::Touch* touch, cocos2d::Event* unused_event);
+    virtual void onTouchEnded(cocos2d::Touch* touch, cocos2d::Event* unused_event);
+    virtual void onTouchCancelled(cocos2d::Touch* touch, cocos2d::Event* unused_event);
     
 };
 

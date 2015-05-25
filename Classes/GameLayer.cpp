@@ -32,6 +32,16 @@ bool GameLayer::init()
     if (!Layer::init())
         return false;
     
+    // シングルタップイベントの取得
+    // _sqallowsTouchesはNodeが持つ変数
+    auto touchListener = EventListenerTouchOneByOne::create();
+    touchListener->setSwallowTouches(_swallowsTouches);
+    touchListener->onTouchBegan = CC_CALLBACK_2(GameLayer::onTouchBegan, this);
+    touchListener->onTouchMoved = CC_CALLBACK_2(GameLayer::onTouchMoved, this);
+    touchListener->onTouchEnded = CC_CALLBACK_2(GameLayer::onTouchEnded, this);
+    touchListener->onTouchCancelled = CC_CALLBACK_2(GameLayer::onTouchCancelled, this);
+    _eventDispatcher->addEventListenerWithSceneGraphPriority(touchListener, this);
+    
     //乱数の初期化
     std::random_device rd;
     _mt = std::mt19937(rd());
@@ -76,9 +86,24 @@ PanelSprite* GameLayer::newPanel(PanelSprite::PositionIndex positionIndex, Panel
     sprite->setPositionIndex(positionIndex);
     sprite->setPosition(PANEL_1_X + (positionIndex.x * PANEL_SIZE),
                         PANEL_1_Y - (positionIndex.y * PANEL_SIZE));
-    log("x%i",PANEL_1_X + (positionIndex.x * PANEL_SIZE));
-    log("y%i",PANEL_1_X + (positionIndex.y * PANEL_SIZE));
     sprite->setAnchorPoint(Point(0, 1));
     addChild(sprite, GameLayer::ZOrder::BALL);
     return sprite;
+}
+
+bool GameLayer::onTouchBegan(Touch* touch, Event* unused_event)
+{
+}
+
+void GameLayer::onTouchMoved(Touch* touch, Event* unused_event)
+{
+}
+
+void GameLayer::onTouchEnded(Touch* touch, Event* unused_event)
+{
+}
+
+void GameLayer::onTouchCancelled(Touch* touch, Event* unused_event)
+{
+    onTouchEnded(touch, unused_event);
 }
