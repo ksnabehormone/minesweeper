@@ -4,6 +4,7 @@
 #define __minesweeper__GameLayer__
 
 #include "cocos2d.h"
+#include "PanelSprite.h"
 #include <random>
 
 class GameLayer : public cocos2d::Layer
@@ -18,7 +19,8 @@ protected:
     //Zオーダー
     enum ZOrder
     {
-        Z_BG = 1,
+        BG = 0,
+        BALL
     };
     
     //ゲームの状態
@@ -35,12 +37,16 @@ protected:
     State _state; //ゲームの状態
     float _totalTime; //ゲーム時間
     
+    // パネル作成
+    PanelSprite* newPanel(PanelSprite::PositionIndex positionIndex, PanelSprite::PanelType type);
+    
 public:
     static cocos2d::Scene* createScene(); //シーン生成
     virtual bool init(); //初期化
     CREATE_FUNC(GameLayer); //create関数生成マクロ
     virtual void onEnter(); //レイヤー表示時処理
     virtual void update(float dt); //update関数（毎フレーム処理）
+    void initPanel();
     
 };
 

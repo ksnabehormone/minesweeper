@@ -25,6 +25,9 @@ bool AppDelegate::applicationDidFinishLaunching() {
 
     // set FPS. the default value is 1.0/60 if you don't call this
     director->setAnimationInterval(1.0 / 60);
+    
+    // 画像が画面の幅にフィットするように画像を伸縮させる
+    glview->setDesignResolutionSize(640, 1136, ResolutionPolicy::FIXED_WIDTH);
 
     // create a scene. it's an autorelease object
     auto scene = GameLayer::createScene();
